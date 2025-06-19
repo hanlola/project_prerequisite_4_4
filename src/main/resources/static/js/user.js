@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    document.body.style.display = "";
+
     try {
         const res = await fetch("/api/users/me", {
             headers: {
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (res.status === 403) {
             console.warn("⚠️ 403 Forbidden — доступ запрещён");
-            alert("У вас нет прав для просмотра этой страницы");
+            window.location.href = "/auth/login";
             return;
         }
 

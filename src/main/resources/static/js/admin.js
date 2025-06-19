@@ -5,24 +5,24 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("🌐 DOMContentLoaded, токен:", token);
 
     if (!token) {
-        console.warn("⛔ Токен отсутствует — редирект через 3 сек");
-        setTimeout(() => {
-            window.location.href = "/auth/login";
-        }, 3000);
+        console.warn("⛔ Токен отсутствует");
+        window.location.href = "/auth/login";
         return;
     }
+
+    document.body.style.display = "";
 
     loadCurrentUser();
     loadUsers();
     loadRolesToSelect();
 
-    // ⬇️ Это уже есть
+
     document.getElementById("newUserForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await createUser();
     });
 
-    // ✅ Добавь вот это для формы редактирования
+
     document.getElementById("editUserForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await updateUser(); // вызываем вручную
@@ -69,15 +69,13 @@ async function fetchWithAuth(url, options = {}) {
         });
 
         localStorage.removeItem("jwtToken");
-
-        // 🚫 ОТКЛЮЧИ временно редирект
-        // window.location.href = "/auth/login";
-
+        window.location.href = "/auth/login";
         return null;
     }
 
     if (res.status === 403) {
         console.warn("⚠️ 403: Доступ запрещён");
+        window.location.href = "/auth/login";
         return res;
     }
 
@@ -102,7 +100,7 @@ async function loadCurrentUser() {
     document.getElementById("user-email").textContent = user.email;
     document.getElementById("user-roles").textContent = formatRole(user.roles);
 
-    // Показываем таб "User" в сайдбаре, если есть роль
+
     if (user.roles.includes("ROLE_USER")) {
         document.getElementById("user-tab").classList.remove("d-none");
     }
